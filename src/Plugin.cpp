@@ -31,7 +31,7 @@ extern "C" __declspec(dllexport) constinit auto SKSEPlugin_Version = []() noexce
     SKSE::PluginVersionData data{};
     data.PluginName("XPControl");
     data.AuthorName("XP Control contributors");
-    data.PluginVersion(REL::Version(0, 1, 0, 0));
+    data.PluginVersion(REL::Version(XPCONTROL_VERSION_MAJOR, XPCONTROL_VERSION_MINOR, XPCONTROL_VERSION_PATCH, 0));
     data.UsesAddressLibrary();
     // Layout differences are handled by CommonLib runtime accessors.
     data.UsesNoStructs();
@@ -53,7 +53,7 @@ extern "C" __declspec(dllexport) bool SKSEPlugin_Load(const SKSE::LoadInterface*
         SKSE::InitInfo init;
         init.log = false;
         SKSE::Init(skse, init);
-        SKSE::log::info("XP Control 0.1.0; Skyrim {}; CommonLibSSE-NG 13.1.0", skse->RuntimeVersion().string());
+        SKSE::log::info("XP Control {}; Skyrim {}; CommonLibSSE-NG 13.1.0", XPCONTROL_VERSION, skse->RuntimeVersion().string());
         const auto* messaging = SKSE::GetMessagingInterface();
         const auto* serialization = SKSE::GetSerializationInterface();
         if (!messaging || !serialization || !SKSE::GetTaskInterface()) return false;

@@ -1,8 +1,9 @@
-name: Build and test
+name: Build, package, and release
 
 on:
   push:
     branches: [master]
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
@@ -11,7 +12,7 @@ permissions:
 
 concurrency:
   group: xp-control-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
   native:
@@ -22,6 +23,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+      - name: Validate release version
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: python3 .github/scripts/release.py --tag "$RELEASE_TAG"
+      - name: Test release validation
+        run: python3 -m unittest discover -s tests -p '*_test.py' -v
       - name: Install compiler
         run: |
           sudo apt-get update
@@ -78,3 +86,25 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
+
+  release:
+    name: Publish GitHub release
+    needs: windows
+    if: startsWith(github.ref, 'refs/tags/v') && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Download tested packages
+        run: gh run download "$GITHUB_RUN_ID" --name "xp-control-$GITHUB_SHA" --dir dist
+      - name: Verify packages and publish release
+        run: python3 .github/scripts/release.py --tag "$RELEASE_TAG" --dist dist --commit "$GITHUB_SHA"

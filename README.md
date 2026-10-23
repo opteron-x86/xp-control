@@ -24,11 +24,13 @@ The universal DLL uses [alandtse CommonLibSSE-NG](https://github.com/alandtse/Co
 
 ## Installation
 
-1. Download the build artifact from [GitHub Actions](https://github.com/opteron-x86/xp-control/actions).
+1. Download the installable ZIP from [GitHub Releases](https://github.com/opteron-x86/xp-control/releases/latest).
 2. Install the `XP-Control-<version>-<commit>.zip` archive with a mod manager.
 3. Start Skyrim through SKSE.
 
 Open **SKSE Menu Framework → XP Control → XP curve** to configure the curve. The framework's key binding controls access to the panel.
+
+Each release also includes debug symbols, build metadata, and SHA-256 checksums. Development builds are available from the artifacts section of successful [GitHub Actions runs](https://github.com/opteron-x86/xp-control/actions).
 
 The configuration file is `Data/SKSE/Plugins/XPControl.ini`:
 
@@ -71,7 +73,9 @@ This preset enables AddressSanitizer and UndefinedBehaviorSanitizer. Tests cover
 
 ### Continuous integration
 
-Pushes to `master`, pull requests, and manual workflow runs execute Linux sanitizer tests, compile the Windows DLL, run Windows tests, audit the SKSE exports and compatibility metadata, and upload packaged artifacts. Each artifact records its source commit.
+Pushes to `master`, pull requests, version tags, and manual workflow runs execute Linux sanitizer tests, compile the Windows DLL, run Windows tests, audit the SKSE exports and compatibility metadata, and upload packaged artifacts. Actions artifacts are retained for 30 days. Each artifact records its source commit.
+
+A `vX.Y.Z` tag matching the CMake project version publishes a GitHub Release after all checks pass. Tags with a suffix, such as `v0.1.0-rc.1`, publish a prerelease. Release assets include the installable ZIP, debug-symbol ZIP, `build-info.json`, and `SHA256SUMS.txt`. See [CONTRIBUTING.md](CONTRIBUTING.md#releases) for the release commands.
 
 ## Contributing
 

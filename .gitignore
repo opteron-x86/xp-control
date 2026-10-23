@@ -4,6 +4,7 @@
 *.tmp
 /.deps/
 /CMakeUserPresets.json
+__pycache__/
 
 # Editor files
 *.kate-swp

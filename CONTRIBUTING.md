@@ -30,6 +30,22 @@ Include the mod version or commit, Skyrim and SKSE versions, configuration, repr
 
 Update dependency pins and license attribution together. Validate the universal SE/AE/VR build, the SKSE metadata audit, and both test platforms.
 
+## Releases
+
+The `project(XPControl VERSION ...)` declaration in `CMakeLists.txt` supplies the package version, DLL metadata, and runtime log version. To publish a release:
+
+1. Update the project version and commit the release changes to `master`.
+2. Create and push the matching annotated tag:
+
+   ```sh
+   git tag -a v0.1.0 -m "XP Control 0.1.0"
+   git push origin v0.1.0
+   ```
+
+The workflow validates the tag, runs Linux and Windows tests, builds and audits `XPControl.dll`, packages the outputs, and publishes the assets on GitHub Releases. A suffix such as `v0.1.0-rc.1` marks a prerelease. Version tags must match the CMake version before the suffix.
+
+Publishing uses the workflow's `GITHUB_TOKEN`. Write permission is scoped to the release job. Each release is published after its assets finish uploading. A rerun verifies an existing published release or completes an interrupted draft. The workflow can also be dispatched against an existing version tag.
+
 ## Licensing
 
 Contributions are distributed under the project's license and exceptions. Preserve applicable third-party attribution when adding or updating dependencies.

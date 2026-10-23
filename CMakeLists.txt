@@ -46,6 +46,11 @@ if(XPCONTROL_BUILD_PLUGIN)
     add_library(XPControl SHARED src/Plugin.cpp src/Runtime.cpp src/Menu.cpp)
     target_include_directories(XPControl PRIVATE third_party)
     target_compile_definitions(XPControl PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX UNICODE _UNICODE)
+    target_compile_definitions(XPControl PRIVATE
+        XPCONTROL_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
+        XPCONTROL_VERSION_MINOR=${PROJECT_VERSION_MINOR}
+        XPCONTROL_VERSION_PATCH=${PROJECT_VERSION_PATCH}
+        XPCONTROL_VERSION="${PROJECT_VERSION}")
     target_compile_options(XPControl PRIVATE /EHsc /utf-8 /permissive- /Zc:__cplusplus
         /W4 /wd4100 /wd4200 /wd4201 /wd4324 /wd4458 /wd4625 /wd4626 /wd4820 /wd4996 /wd5026
         /wd5027 /wd5039 /wd5045 /wd5267 /Zi)

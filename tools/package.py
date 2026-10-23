@@ -23,8 +23,8 @@ subprocess.run([sys.executable, str(root / 'tools/audit-dll.py'), str(dll)], che
 commit = subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip()
 dirty = bool(subprocess.check_output(['git', '-C', str(root), 'status', '--porcelain'], text=True).strip())
 args.output.mkdir(parents=True, exist_ok=True)
-name = f'XP-Control-{version}-{commit[:8]}' + ('-dirty' if dirty else '')
-with zipfile.ZipFile(args.output / (name + '.zip'), 'w', zipfile.ZIP_DEFLATED) as archive:
+package_name = f'XP-Control-{version}-{commit[:8]}' + ('-dirty' if dirty else '')
+with zipfile.ZipFile(args.output / (package_name + '.zip'), 'w', zipfile.ZIP_DEFLATED) as archive:
     archive.write(dll, 'SKSE/Plugins/XPControl.dll')
     archive.write(root / 'package/SKSE/Plugins/XPControl.ini', 'SKSE/Plugins/XPControl.ini')
     for file in ['README.md', 'THIRD_PARTY_NOTICES.md', 'LICENSE', 'EXCEPTIONS.md']:
@@ -43,9 +43,9 @@ with zipfile.ZipFile(args.output / (name + '.zip'), 'w', zipfile.ZIP_DEFLATED) a
     licenses['OpenVR.txt'] = openvr
     for notice in (commonlib / 'licenses').glob('*.txt'):
         licenses['CommonLib-' + notice.name] = notice
-    for name, file in sorted(licenses.items()):
-        archive.write(file, 'licenses/' + name)
-with zipfile.ZipFile(args.output / (name + '-symbols.zip'), 'w', zipfile.ZIP_DEFLATED) as archive:
+    for license_name, file in sorted(licenses.items()):
+        archive.write(file, 'licenses/' + license_name)
+with zipfile.ZipFile(args.output / (package_name + '-symbols.zip'), 'w', zipfile.ZIP_DEFLATED) as archive:
     archive.write(pdb, pdb.name)
 metadata = {'version': version, 'commit': commit, 'dirty': dirty, 'runtimes': ['SE', 'AE (Steam/GOG, including 1.7.99)', 'VR'], 'commonlib': '13.1.0', 'commonlib_commit': '12d61f3c39f7d4ba1b1ab543df2bca0e613dc747',
             'dll_sha256': hashlib.sha256(dll.read_bytes()).hexdigest()}

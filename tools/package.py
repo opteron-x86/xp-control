@@ -41,6 +41,8 @@ with zipfile.ZipFile(args.output / (name + '.zip'), 'w', zipfile.ZIP_DEFLATED) a
     if not openvr.is_file():
         raise RuntimeError('Missing OpenVR submodule license')
     licenses['OpenVR.txt'] = openvr
+    for notice in (commonlib / 'licenses').glob('*.txt'):
+        licenses['CommonLib-' + notice.name] = notice
     for name, file in sorted(licenses.items()):
         archive.write(file, 'licenses/' + name)
 with zipfile.ZipFile(args.output / (name + '-symbols.zip'), 'w', zipfile.ZIP_DEFLATED) as archive:

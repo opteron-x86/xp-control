@@ -38,7 +38,7 @@ extern "C" __declspec(dllexport) constinit auto SKSEPlugin_Version = []() noexce
     return data;
 }();
 
-extern "C" __declspec(dllexport) bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* skse) {
+extern "C" __declspec(dllexport) bool SKSEPlugin_Load(const SKSE::LoadInterface* skse) {
     if (!skse || skse->IsEditor()) return false;
     auto directory = SKSE::log::log_directory();
     if (!directory) return false;
@@ -68,7 +68,7 @@ extern "C" __declspec(dllexport) bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadIn
 
 // SE and VR use Query; AE uses SKSEPlugin_Version. Both entry points are
 // required for a universal DLL. Address Library supplies the runtime IDs.
-extern "C" __declspec(dllexport) bool SKSEAPI SKSEPlugin_Query(
+extern "C" __declspec(dllexport) bool SKSEPlugin_Query(
     const SKSE::QueryInterface* skse, SKSE::PluginInfo* info) {
     if (!skse || !info || skse->IsEditor()) return false;
     info->infoVersion = SKSE::PluginInfo::kVersion;

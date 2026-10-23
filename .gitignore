@@ -1,0 +1,10 @@
+/build/
+/dist/
+/validation/
+*.tmp
+/.deps/
+/CMakeUserPresets.json
+
+# Editor files
+*.kate-swp
+*.swp
